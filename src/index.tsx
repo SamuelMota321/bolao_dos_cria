@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { TelaInicialLogin } from "./screens/TelaInicialLogin";
 import { TelaCadastro } from "./screens/TelaCadastro";
 import { TelaSucesso } from "./screens/TelaSucesso";
+import { Dashboard } from "./screens/Dashboard";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
@@ -12,6 +13,7 @@ createRoot(document.getElementById("app") as HTMLElement).render(
         <Route path="/" element={<TelaInicialLogin />} />
         <Route path="/cadastro" element={<TelaCadastro />} />
         <Route path="/sucesso" element={<TelaSucesso />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   </StrictMode>

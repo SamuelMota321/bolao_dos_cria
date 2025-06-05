@@ -7,6 +7,11 @@ import { useNavigate } from "react-router-dom";
 export const TelaInicialLogin = (): JSX.Element => {
   const navigate = useNavigate();
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate("/dashboard");
+  };
+
   return (
     <div className="flex h-screen bg-[#111611] overflow-hidden">
       {/* Left side - Login form */}
@@ -17,7 +22,7 @@ export const TelaInicialLogin = (): JSX.Element => {
               Entre na sua conta
             </h1>
 
-            <div className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-white text-base font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
                   Email
@@ -39,7 +44,7 @@ export const TelaInicialLogin = (): JSX.Element => {
                 />
               </div>
 
-              <Button className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
+              <Button type="submit" className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
                 Entrar
               </Button>
 
@@ -58,7 +63,7 @@ export const TelaInicialLogin = (): JSX.Element => {
               <p className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica] mt-4 cursor-pointer">
                 Esqueci minha senha
               </p>
-            </div>
+            </form>
 
             <div className="flex justify-center mt-12">
               <img
@@ -79,13 +84,6 @@ export const TelaInicialLogin = (): JSX.Element => {
           src="/chatgpt-image-6-de-mai--de-2025--15-51-28-1-1.png"
         />
       </div>
-
-      {/* Google icon - positioned according to design */}
-      <img
-        className="absolute w-6 h-6 hidden"
-        alt="Flat color icons"
-        src="/flat-color-icons-google.svg"
-      />
     </div>
   );
 };
