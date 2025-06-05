@@ -2,8 +2,11 @@ import React from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const Dashboard = (): JSX.Element => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-[#0B2B0B]">
       {/* Navigation */}
@@ -61,7 +64,10 @@ export const Dashboard = (): JSX.Element => {
             Meus Bolões
           </h1>
           <div className="flex items-center gap-4">
-            <Button className="bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] h-10 px-6 rounded-lg font-semibold">
+            <Button 
+              className="bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] h-10 px-6 rounded-lg font-semibold"
+              onClick={() => navigate("/criar-bolao")}
+            >
               Criar Bolão
             </Button>
             <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
@@ -99,7 +105,10 @@ export const Dashboard = (): JSX.Element => {
             Você ainda não participa de nenhum bolão.
           </p>
           <div className="flex items-center gap-4">
-            <Button className="bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] h-10 px-6 rounded-lg font-semibold">
+            <Button 
+              className="bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] h-10 px-6 rounded-lg font-semibold"
+              onClick={() => navigate("/criar-bolao")}
+            >
               Criar um Bolão
             </Button>
             <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
