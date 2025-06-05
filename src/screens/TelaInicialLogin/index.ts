@@ -1,0 +1,1 @@
+export { TelaInicialLogin } from "./TelaInicialLogin";

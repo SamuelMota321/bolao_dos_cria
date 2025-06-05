@@ -1,0 +1,1 @@
+export { TelaCadastro } from "./TelaCadastro";
