@@ -38,7 +38,10 @@ export const Dashboard = (): JSX.Element => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div 
+            className="flex items-center gap-2 cursor-pointer hover:bg-white/10 rounded-lg p-2 transition-colors"
+            onClick={() => navigate("/perfil-usuario")}
+          >
             <div className="w-10 h-10 bg-[#9eb79e] rounded-full flex items-center justify-center">
               <span className="text-[#111611] font-bold">U</span>
             </div>
@@ -70,7 +73,11 @@ export const Dashboard = (): JSX.Element => {
             >
               Criar Bolão
             </Button>
-            <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
+            <Button 
+              variant="outline" 
+              className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg"
+              onClick={() => navigate("/participar-bolao")}
+            >
               Participar
             </Button>
           </div>
@@ -111,7 +118,11 @@ export const Dashboard = (): JSX.Element => {
             >
               Criar um Bolão
             </Button>
-            <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
+            <Button 
+              variant="outline" 
+              className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg"
+              onClick={() => navigate("/participar-bolao")}
+            >
               Ver Todos os Bolões
             </Button>
           </div>
