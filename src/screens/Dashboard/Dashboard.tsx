@@ -38,7 +38,10 @@ export const Dashboard = (): JSX.Element => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div 
+            className="flex items-center gap-2 cursor-pointer hover:bg-white/10 rounded-lg p-2 transition-colors"
+            onClick={() => navigate("/perfil-usuario")}
+          >
             <div className="w-10 h-10 bg-[#9eb79e] rounded-full flex items-center justify-center">
               <span className="text-[#111611] font-bold">U</span>
             </div>
