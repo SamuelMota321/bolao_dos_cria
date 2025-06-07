@@ -6,6 +6,7 @@ import { TelaCadastro } from "./screens/TelaCadastro";
 import { TelaSucesso } from "./screens/TelaSucesso";
 import { Dashboard } from "./screens/Dashboard";
 import { CriarBolao } from "./screens/CriarBolao";
+import { ParticiparBolao } from "./screens/ParticiparBolao";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById("app") as HTMLElement).render(
         <Route path="/sucesso" element={<TelaSucesso />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/criar-bolao" element={<CriarBolao />} />
+        <Route path="/participar-bolao" element={<ParticiparBolao />} />
       </Routes>
     </Router>
   </StrictMode>

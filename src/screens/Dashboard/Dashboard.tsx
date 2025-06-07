@@ -70,7 +70,11 @@ export const Dashboard = (): JSX.Element => {
             >
               Criar Bolão
             </Button>
-            <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
+            <Button 
+              variant="outline" 
+              className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg"
+              onClick={() => navigate("/participar-bolao")}
+            >
               Participar
             </Button>
           </div>
@@ -111,7 +115,11 @@ export const Dashboard = (): JSX.Element => {
             >
               Criar um Bolão
             </Button>
-            <Button variant="outline" className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg">
+            <Button 
+              variant="outline" 
+              className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg"
+              onClick={() => navigate("/participar-bolao")}
+            >
               Ver Todos os Bolões
             </Button>
           </div>
