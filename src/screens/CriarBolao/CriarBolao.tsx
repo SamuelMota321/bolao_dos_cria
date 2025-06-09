@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -66,7 +65,7 @@ export const CriarBolao = (): JSX.Element => {
             />
           </div>
 
-          <Button 
+          <Button
             className="w-full h-12 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-base [font-family:'Plus_Jakarta_Sans',Helvetica] mt-8"
           >
             Criar Bolão
@@ -76,22 +75,11 @@ export const CriarBolao = (): JSX.Element => {
 
       {/* Right side - Image */}
       <div className="w-1/2 relative">
-        <div className="absolute inset-0 bg-[#0B2B0B]/80"></div>
         <img
           className="w-full h-full object-cover"
           alt="Soccer background"
           src="/chatgpt-image-6-de-mai--de-2025--15-51-28-1-1.png"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <img
-            className="w-32 h-32 mb-6"
-            alt="Logo"
-            src="/chatgpt-image-6-de-mai--de-2025--16-00-29-1-1.png"
-          />
-          <h2 className="text-5xl font-bold text-white text-center [font-family:'Plus_Jakarta_Sans',Helvetica]">
-            Crie seu bolão
-          </h2>
-        </div>
       </div>
     </div>
   );

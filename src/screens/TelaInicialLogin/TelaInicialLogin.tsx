@@ -14,7 +14,6 @@ export const TelaInicialLogin = (): JSX.Element => {
 
   return (
     <div className="flex h-screen bg-[#111611] overflow-hidden">
-      {/* Left side - Login form */}
       <div className="w-1/2 flex items-center justify-center">
         <Card className="bg-transparent border-none w-[480px]">
           <CardContent className="pt-6 px-0">
@@ -28,8 +27,10 @@ export const TelaInicialLogin = (): JSX.Element => {
                   Email
                 </label>
                 <Input
+                  type="email"
                   className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
-                  defaultValue="jean@exemplo.com"
+                  placeholder="Digite seu email"
+                  required
                 />
               </div>
 
@@ -40,17 +41,14 @@ export const TelaInicialLogin = (): JSX.Element => {
                 <Input
                   type="password"
                   className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
-                  defaultValue="*********"
+                  placeholder="Digite sua senha"
+                  required
                 />
               </div>
 
               <Button type="submit" className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
                 Entrar
               </Button>
-
-              <p className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                Não tem uma conta?
-              </p>
 
               <Button
                 variant="outline"

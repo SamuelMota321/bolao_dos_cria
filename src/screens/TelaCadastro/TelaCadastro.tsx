@@ -14,7 +14,6 @@ export const TelaCadastro = (): JSX.Element => {
 
   return (
     <div className="flex h-screen bg-[#111611] overflow-hidden">
-      {/* Left side - Registration form */}
       <div className="w-1/2 flex items-center justify-center">
         <Card className="bg-transparent border-none w-[480px]">
           <CardContent className="pt-6 px-0">
@@ -58,7 +57,7 @@ export const TelaCadastro = (): JSX.Element => {
                 />
               </div>
 
-              <Button 
+              <Button
                 type="submit"
                 className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]"
               >
@@ -67,7 +66,7 @@ export const TelaCadastro = (): JSX.Element => {
 
               <p className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica]">
                 Já tem uma conta?{" "}
-                <span 
+                <span
                   className="text-white cursor-pointer"
                   onClick={() => navigate("/")}
                 >
@@ -87,7 +86,6 @@ export const TelaCadastro = (): JSX.Element => {
         </Card>
       </div>
 
-      {/* Right side - Background image */}
       <div className="w-1/2 relative">
         <img
           className="w-full h-full object-cover"
