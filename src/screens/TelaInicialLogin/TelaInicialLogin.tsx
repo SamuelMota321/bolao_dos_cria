@@ -58,7 +58,10 @@ export const TelaInicialLogin = (): JSX.Element => {
                 Criar Conta
               </Button>
 
-              <p className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica] mt-4 cursor-pointer">
+              <p 
+                className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica] mt-4 cursor-pointer hover:text-white transition-colors"
+                onClick={() => navigate("/esqueci-senha")}
+              >
                 Esqueci minha senha
               </p>
             </form>

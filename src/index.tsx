@@ -8,6 +8,10 @@ import { Dashboard } from "./screens/Dashboard";
 import { CriarBolao } from "./screens/CriarBolao";
 import { ParticiparBolao } from "./screens/ParticiparBolao";
 import { PerfilUsuario } from "./screens/PerfilUsuario";
+import { Ranking } from "./screens/Ranking";
+import { EsqueciSenha } from "./screens/EsqueciSenha";
+import { RedefinirSenha } from "./screens/RedefinirSenha";
+import { SenhaAtualizada } from "./screens/SenhaAtualizada";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
@@ -20,6 +24,10 @@ createRoot(document.getElementById("app") as HTMLElement).render(
         <Route path="/criar-bolao" element={<CriarBolao />} />
         <Route path="/participar-bolao" element={<ParticiparBolao />} />
         <Route path="/perfil-usuario" element={<PerfilUsuario />} />
+        <Route path="/ranking" element={<Ranking />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+        <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
       </Routes>
     </Router>
   </StrictMode>
