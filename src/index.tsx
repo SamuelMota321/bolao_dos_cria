@@ -10,6 +10,7 @@ import { ParticiparBolao } from "./screens/ParticiparBolao";
 import { PerfilUsuario } from "./screens/PerfilUsuario";
 import { Ranking } from "./screens/Ranking";
 import { EsqueciSenha } from "./screens/EsqueciSenha";
+import { VerificarCodigo } from "./screens/VerificarCodigo";
 import { RedefinirSenha } from "./screens/RedefinirSenha";
 import { SenhaAtualizada } from "./screens/SenhaAtualizada";
 
@@ -26,6 +27,7 @@ createRoot(document.getElementById("app") as HTMLElement).render(
         <Route path="/perfil-usuario" element={<PerfilUsuario />} />
         <Route path="/ranking" element={<Ranking />} />
         <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+        <Route path="/verificar-codigo" element={<VerificarCodigo />} />
         <Route path="/redefinir-senha" element={<RedefinirSenha />} />
         <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
       </Routes>

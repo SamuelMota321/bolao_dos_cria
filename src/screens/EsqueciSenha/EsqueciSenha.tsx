@@ -10,7 +10,7 @@ export const EsqueciSenha = (): JSX.Element => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/redefinir-senha");
+    navigate("/verificar-codigo");
   };
 
   return (
