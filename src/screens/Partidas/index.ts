@@ -1,0 +1,1 @@
+export { Partidas } from "./Partidas";

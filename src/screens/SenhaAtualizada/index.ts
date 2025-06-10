@@ -1,0 +1,1 @@
+export { SenhaAtualizada } from "./SenhaAtualizada";

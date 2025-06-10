@@ -1,0 +1,1 @@
+export { EsqueciSenha } from "./EsqueciSenha";
