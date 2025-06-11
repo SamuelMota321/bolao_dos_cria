@@ -13,12 +13,14 @@ export const Header = () => {
             alt="Logo"
             className="w-12 h-12"
           />
-          <span className="text-white text-2xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
+          <span
+            className="text-white text-2xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]"
+            onClick={() => navigate("/dashboard")}>
             Bolão Dos Cria
           </span>
         </div>
         <div className="flex items-center gap-8">
-          <span 
+          <span
             className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors"
             onClick={() => navigate("/dashboard")}
           >
@@ -27,13 +29,13 @@ export const Header = () => {
           <span className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors">
             Bolões
           </span>
-          <span 
+          <span
             className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors"
             onClick={() => navigate("/partidas")}
           >
             Partidas
           </span>
-          <span 
+          <span
             className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors"
             onClick={() => navigate("/ranking")}
           >

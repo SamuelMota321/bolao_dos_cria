@@ -4,6 +4,7 @@ import { Input } from "../../components/ui/input";
 import { Search, Clock, Trophy } from "lucide-react";
 import { api } from "../../lib/api"
 import { Button } from "../../components/ui/button";
+import { authorization } from "../../lib/utils";
 interface Campeonato {
   campeonato_id: number;
   nome: string;
@@ -68,11 +69,6 @@ export const Partidas = (): JSX.Element => {
     try {
       setLoading(true);
       setError(null)
-      const authorization = {
-        headers: {
-          Authorization: `Bearer test_94757ffefadf27ed714c158bdd2205`,
-        },
-      };
       const { data } = await api.get('/ao-vivo', authorization);
 
       setPartidas(data);

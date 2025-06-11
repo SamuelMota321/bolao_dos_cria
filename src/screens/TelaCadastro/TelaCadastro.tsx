@@ -57,6 +57,18 @@ export const TelaCadastro = (): JSX.Element => {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label className="text-white text-base font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                  Confirmar Senha
+                </label>
+                <Input
+                  type="password"
+                  className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
+
               <Button
                 type="submit"
                 className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]"
