@@ -3,6 +3,7 @@ import { Header } from "../../components/ui/header";
 import { Input } from "../../components/ui/input";
 import { Search, Clock, Trophy } from "lucide-react";
 import { api } from "../../lib/api"
+import { Button } from "../../components/ui/button";
 interface Campeonato {
   campeonato_id: number;
   nome: string;
@@ -59,25 +60,28 @@ export const Partidas = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const fetchPartidas = async () => {
-      try {
-        setLoading(true);
-        const { data } = await api.get('/ao-vivo');
-
-        if (!data.ok) {
-          throw new Error('Erro ao carregar partidas');
-        }
-
-        setPartidas(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Erro desconhecido');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPartidas();
   }, []);
+
+
+  const fetchPartidas = async () => {
+    try {
+      setLoading(true);
+      setError(null)
+      const authorization = {
+        headers: {
+          Authorization: `Bearer test_94757ffefadf27ed714c158bdd2205`,
+        },
+      };
+      const { data } = await api.get('/ao-vivo', authorization);
+
+      setPartidas(data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPartidas = partidas.filter(partida =>
     partida.time_mandante.nome_popular.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -139,7 +143,10 @@ export const Partidas = (): JSX.Element => {
         <main className="px-8 py-6">
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="text-white text-xl [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              Erro ao carregar partidas: {error}
+              {error}: <Button
+                className="bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff] h-10 px-6 rounded-lg font-semibold"
+                onClick={() => fetchPartidas()}>
+              </Button>
             </div>
           </div>
         </main>
