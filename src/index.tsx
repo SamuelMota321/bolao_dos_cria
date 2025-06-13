@@ -14,25 +14,28 @@ import { EsqueciSenha } from "./screens/EsqueciSenha";
 import { VerificarCodigo } from "./screens/VerificarCodigo";
 import { RedefinirSenha } from "./screens/RedefinirSenha";
 import { SenhaAtualizada } from "./screens/SenhaAtualizada";
+import { UserContextProvider } from "./providers/UserContext";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<TelaInicialLogin />} />
-        <Route path="/cadastro" element={<TelaCadastro />} />
-        <Route path="/sucesso" element={<TelaSucesso />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/criar-bolao" element={<CriarBolao />} />
-        <Route path="/participar-bolao" element={<ParticiparBolao />} />
-        <Route path="/perfil-usuario" element={<PerfilUsuario />} />
-        <Route path="/ranking" element={<Ranking />} />
-        <Route path="/partidas" element={<Partidas />} />
-        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
-        <Route path="/verificar-codigo" element={<VerificarCodigo />} />
-        <Route path="/redefinir-senha" element={<RedefinirSenha />} />
-        <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
-      </Routes>
-    </Router>
+    <UserContextProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<TelaInicialLogin />} />
+          <Route path="/cadastro" element={<TelaCadastro />} />
+          <Route path="/sucesso" element={<TelaSucesso />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/criar-bolao" element={<CriarBolao />} />
+          <Route path="/participar-bolao" element={<ParticiparBolao />} />
+          <Route path="/perfil-usuario" element={<PerfilUsuario />} />
+          <Route path="/ranking" element={<Ranking />} />
+          <Route path="/partidas" element={<Partidas />} />
+          <Route path="/esqueci-senha" element={<EsqueciSenha />} />
+          <Route path="/verificar-codigo" element={<VerificarCodigo />} />
+          <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+          <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
+        </Routes>
+      </Router>
+    </UserContextProvider>
   </StrictMode>
 );

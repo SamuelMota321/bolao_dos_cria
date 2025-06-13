@@ -1,15 +1,23 @@
-import React from "react";
+import { useContext } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { loginSchema } from "../../schemas/loginSchema";
+import { LoginFormData, UserContext } from "../../providers/UserContext";
+
 
 export const TelaInicialLogin = (): JSX.Element => {
+  const { userLogin } = useContext(UserContext)
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: zodResolver(loginSchema)
+  })
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    navigate("/dashboard");
+  const submit = (formData: LoginFormData) => {
+    userLogin(formData)
   };
 
   return (
@@ -21,16 +29,17 @@ export const TelaInicialLogin = (): JSX.Element => {
               Entre na sua conta
             </h1>
 
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleSubmit(submit)} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-white text-base font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
                   Email
                 </label>
                 <Input
-                  type="email"
-                  className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
+                  type="text"
+                  className="h-14 bg-[#1c261c] border-[#3d543d] rounded-  xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
                   placeholder="Digite seu email"
-                  required
+                  {...register('email')}
+                  error={errors.email?.message}
                 />
               </div>
 
@@ -42,7 +51,8 @@ export const TelaInicialLogin = (): JSX.Element => {
                   type="password"
                   className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
                   placeholder="Digite sua senha"
-                  required
+                  {...register('password')}
+                  error={errors.password?.message}
                 />
               </div>
 
@@ -58,7 +68,7 @@ export const TelaInicialLogin = (): JSX.Element => {
                 Criar Conta
               </Button>
 
-              <p 
+              <p
                 className="text-center text-sm text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica] mt-4 cursor-pointer hover:text-white transition-colors"
                 onClick={() => navigate("/esqueci-senha")}
               >
