@@ -18,8 +18,8 @@ import { UserContextProvider } from "./providers/UserContext";
 
 createRoot(document.getElementById("app") as HTMLElement).render(
   <StrictMode>
-    <UserContextProvider>
-      <Router>
+    <Router>
+      <UserContextProvider>
         <Routes>
           <Route path="/" element={<TelaInicialLogin />} />
           <Route path="/cadastro" element={<TelaCadastro />} />
@@ -35,7 +35,7 @@ createRoot(document.getElementById("app") as HTMLElement).render(
           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
           <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
         </Routes>
-      </Router>
-    </UserContextProvider>
+      </UserContextProvider>
+    </Router>
   </StrictMode>
 );
