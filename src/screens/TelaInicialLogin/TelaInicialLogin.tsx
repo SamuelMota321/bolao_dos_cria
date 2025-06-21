@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -8,16 +8,21 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema } from "../../schemas/loginSchema";
 import { LoginFormData, UserContext } from "../../providers/UserContext";
 
-
 export const TelaInicialLogin = (): JSX.Element => {
-  const { userLogin } = useContext(UserContext)
+  const { userLogin, loading } = useContext(UserContext);
+  const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema)
-  })
+  });
   const navigate = useNavigate();
 
-  const submit = (formData: LoginFormData) => {
-    userLogin(formData)
+  const submit = async (formData: LoginFormData) => {
+    try {
+      setError(null);
+      await userLogin(formData);
+    } catch (err: any) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -29,6 +34,12 @@ export const TelaInicialLogin = (): JSX.Element => {
               Entre na sua conta
             </h1>
 
+            {error && (
+              <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-lg mb-6 text-center">
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit(submit)} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-white text-base font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
@@ -36,7 +47,7 @@ export const TelaInicialLogin = (): JSX.Element => {
                 </label>
                 <Input
                   type="text"
-                  className="h-14 bg-[#1c261c] border-[#3d543d] rounded-  xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
+                  className="h-14 bg-[#1c261c] border-[#3d543d] rounded-xl text-base [font-family:'Plus_Jakarta_Sans',Helvetica] text-[#9eb79e]"
                   placeholder="Digite seu email"
                   {...register('email')}
                   error={errors.email?.message}
@@ -56,11 +67,16 @@ export const TelaInicialLogin = (): JSX.Element => {
                 />
               </div>
 
-              <Button type="submit" className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                Entrar
+              <Button 
+                type="submit" 
+                disabled={loading}
+                className="w-full h-10 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica] disabled:opacity-50"
+              >
+                {loading ? 'Entrando...' : 'Entrar'}
               </Button>
 
               <Button
+                type="button"
                 variant="outline"
                 className="w-full h-10 bg-[#283828] hover:bg-[#283828]/90 text-white border-none rounded-[20px] font-bold text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]"
                 onClick={() => navigate("/cadastro")}

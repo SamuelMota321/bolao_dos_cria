@@ -1,17 +1,29 @@
+import { useContext } from "react";
 import { Button } from "../../components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Trophy, Calendar } from "lucide-react";
 import { Header } from "../../components/ui/header";
+import { UserContext } from "../../providers/UserContext";
+import { useBoloes } from "../../hooks/useBoloes";
 
 export const PerfilUsuario = (): JSX.Element => {
   const navigate = useNavigate();
+  const { profile, userLogout } = useContext(UserContext);
+  const { meusBoloes } = useBoloes();
+
+  const handleLogout = async () => {
+    try {
+      await userLogout();
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
 
   return (
     <div
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/imagem-1.png')" }}
     >
-
       <Header />
 
       <div className="relative z-10 px-8 pt-6">
@@ -30,14 +42,16 @@ export const PerfilUsuario = (): JSX.Element => {
         {/* User Profile Section */}
         <div className="flex items-center gap-4 mb-8">
           <div className="w-16 h-16 bg-[#9eb79e] rounded-full flex items-center justify-center">
-            <span className="text-[#111611] font-bold text-2xl">U</span>
+            <span className="text-[#111611] font-bold text-2xl">
+              {profile?.name?.charAt(0).toUpperCase() || 'U'}
+            </span>
           </div>
           <div>
             <h1 className="text-white text-2xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              Usuário
+              {profile?.name || 'Usuário'}
             </h1>
             <p className="text-[#9eb79e] text-lg [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              usuario@gmail.com
+              {profile?.email || 'usuario@gmail.com'}
             </p>
           </div>
         </div>
@@ -67,7 +81,7 @@ export const PerfilUsuario = (): JSX.Element => {
                   Bolões Participando
                 </p>
                 <p className="text-[#111611] text-3xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                  1
+                  {meusBoloes.length}
                 </p>
               </div>
             </div>
@@ -76,7 +90,7 @@ export const PerfilUsuario = (): JSX.Element => {
             <Button
               variant="outline"
               className="bg-[#283828] hover:bg-[#283828]/90 text-white border-none h-10 px-6 rounded-lg"
-              onClick={() => navigate("/")}
+              onClick={handleLogout}
             >
               Sair da conta
             </Button>
@@ -106,26 +120,36 @@ export const PerfilUsuario = (): JSX.Element => {
               </div>
             </div>
 
-            {/* Table Row */}
-            <div className="grid grid-cols-4 gap-4 p-4 items-center">
-              <div className="text-[#111611] font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                Bolão exemplo
+            {/* Table Rows */}
+            {meusBoloes.length > 0 ? (
+              meusBoloes.map((bolao) => (
+                <div key={bolao.id} className="grid grid-cols-4 gap-4 p-4 items-center border-b border-gray-100 last:border-b-0">
+                  <div className="text-[#111611] font-medium [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                    {bolao.name}
+                  </div>
+                  <div className="text-[#111611] [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                    {bolao.campeonato}
+                  </div>
+                  <div className="text-[#111611] [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                    {bolao.participants_count} pessoas
+                  </div>
+                  <div>
+                    <Button
+                      variant="ghost"
+                      className="text-[#19e519] hover:bg-[#19e519]/10 p-0 h-auto font-medium"
+                    >
+                      Visualizar
+                    </Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="p-8 text-center">
+                <p className="text-[#9eb79e] [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                  Você ainda não participa de nenhum bolão.
+                </p>
               </div>
-              <div className="text-[#111611] [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                Brasileirão Série A
-              </div>
-              <div className="text-[#111611] [font-family:'Plus_Jakarta_Sans',Helvetica]">
-                1 pessoas
-              </div>
-              <div>
-                <Button
-                  variant="ghost"
-                  className="text-[#19e519] hover:bg-[#19e519]/10 p-0 h-auto font-medium"
-                >
-                  Visualizar
-                </Button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

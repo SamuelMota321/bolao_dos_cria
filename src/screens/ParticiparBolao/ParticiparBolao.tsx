@@ -4,15 +4,38 @@ import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, Eye, EyeOff } from "lucide-react";
 import { Header } from "../../components/ui/header";
+import { useBoloes } from "../../hooks/useBoloes";
 
 export const ParticiparBolao = (): JSX.Element => {
   const navigate = useNavigate();
+  const { joinBolaoByPassword, loading } = useBoloes();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/dashboard");
+    
+    if (!password.trim()) {
+      setError('Digite a senha do bolão');
+      return;
+    }
+
+    try {
+      setError(null);
+      setSuccess(null);
+      
+      const bolao = await joinBolaoByPassword(password);
+      setSuccess(`Você entrou no bolão "${bolao.name}" com sucesso!`);
+      
+      // Redirecionar após 2 segundos
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
+    } catch (err: any) {
+      setError(err.message || 'Erro ao entrar no bolão');
+    }
   };
 
   return (
@@ -20,7 +43,6 @@ export const ParticiparBolao = (): JSX.Element => {
       className="min-h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/imagem-1.png')" }}
     >
-
       {/* Navigation */}
       <Header />
 
@@ -44,6 +66,18 @@ export const ParticiparBolao = (): JSX.Element => {
           <p className="text-white text-lg mb-8 [font-family:'Plus_Jakarta_Sans',Helvetica]">
             Digite a senha do bolão para participar
           </p>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-lg mb-6 w-96 mx-auto">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-2 rounded-lg mb-6 w-96 mx-auto">
+              {success}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="w-96 mx-auto">
             <div className="relative mb-6">
@@ -70,9 +104,10 @@ export const ParticiparBolao = (): JSX.Element => {
 
             <Button
               type="submit"
-              className="w-full h-12 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-xl font-bold text-base [font-family:'Plus_Jakarta_Sans',Helvetica]"
+              disabled={loading}
+              className="w-full h-12 bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] rounded-xl font-bold text-base [font-family:'Plus_Jakarta_Sans',Helvetica] disabled:opacity-50"
             >
-              Participar do Bolão
+              {loading ? 'Entrando no Bolão...' : 'Participar do Bolão'}
             </Button>
           </form>
         </div>
