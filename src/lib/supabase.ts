@@ -3,6 +3,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+let supabase: any
+
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase environment variables. Please click "Connect to Supabase" button in the top right corner to set up your Supabase project.')
   
@@ -23,10 +25,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
     })
   }
   
-  // Export the mock client to prevent crashes
-  export const supabase = mockClient as any
+  // Assign the mock client to prevent crashes
+  supabase = mockClient
 } else {
-  export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+  supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
 
 // Tipos para o banco de dados
@@ -58,3 +60,5 @@ export interface BolaoParticipant {
   user?: Profile
   bolao?: Bolao
 }
+
+export { supabase }
