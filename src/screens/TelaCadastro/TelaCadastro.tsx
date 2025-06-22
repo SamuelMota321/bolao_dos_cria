@@ -1,24 +1,14 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { RegisterFormData, UserContext } from "../../providers/UserContext";
+import { UserContext } from "../../providers/UserContext";
+import { RegisterFormType, registerSchema } from "../../schemas/registerSchema";
 
-const registerSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  email: z.string().email("Forneça um email válido"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Senhas não coincidem",
-  path: ["confirmPassword"],
-});
 
-type RegisterFormType = z.infer<typeof registerSchema>;
 
 export const TelaCadastro = (): JSX.Element => {
   const { userRegister, loading } = useContext(UserContext);
@@ -31,7 +21,7 @@ export const TelaCadastro = (): JSX.Element => {
   const submit = async (formData: RegisterFormType) => {
     try {
       setError(null);
-      const { confirmPassword, ...registerData } = formData;
+      const { ...registerData } = formData;
       await userRegister(registerData);
     } catch (err: any) {
       setError(err.message);

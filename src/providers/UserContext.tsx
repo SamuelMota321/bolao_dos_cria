@@ -2,17 +2,10 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase, Profile } from "../lib/supabase";
 import { User } from "@supabase/supabase-js";
+import { LoginFormType } from "../schemas/loginSchema";
+import { RegisterFormType } from "../schemas/registerSchema";
+import { Session, AuthChangeEvent } from '@supabase/supabase-js';
 
-export interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-export interface RegisterFormData {
-  name: string;
-  email: string;
-  password: string;
-}
 
 interface UserProviderProps {
   children: ReactNode;
@@ -22,8 +15,8 @@ interface UserContextType {
   user: User | null;
   profile: Profile | null;
   loading: boolean;
-  userLogin: (formData: LoginFormData) => Promise<void>;
-  userRegister: (formData: RegisterFormData) => Promise<void>;
+  userLogin: (formData: LoginFormType) => Promise<void>;
+  userRegister: (formData: RegisterFormType) => Promise<void>;
   userLogout: () => Promise<void>;
 }
 
@@ -37,17 +30,17 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
   useEffect(() => {
     // Verificar sessão atual
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
+      const { session } = data;
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
       }
       setLoading(false);
     });
-
     // Escutar mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session: Session) => {
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
@@ -76,7 +69,7 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
     }
   };
 
-  const userLogin = async (formData: LoginFormData) => {
+  const userLogin = async (formData: LoginFormType) => {
     try {
       setLoading(true);
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -97,7 +90,7 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
     }
   };
 
-  const userRegister = async (formData: RegisterFormData) => {
+  const userRegister = async (formData: RegisterFormType) => {
     try {
       setLoading(true);
       const { data, error } = await supabase.auth.signUp({
@@ -141,13 +134,13 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
   };
 
   return (
-    <UserContext.Provider value={{ 
-      user, 
-      profile, 
-      loading, 
-      userLogin, 
-      userRegister, 
-      userLogout 
+    <UserContext.Provider value={{
+      user,
+      profile,
+      loading,
+      userLogin,
+      userRegister,
+      userLogout
     }}>
       {children}
     </UserContext.Provider>

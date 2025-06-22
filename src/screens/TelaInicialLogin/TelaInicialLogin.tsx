@@ -5,18 +5,18 @@ import { Input } from "../../components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod"
-import { loginSchema } from "../../schemas/loginSchema";
-import { LoginFormData, UserContext } from "../../providers/UserContext";
+import { LoginFormType, loginSchema } from "../../schemas/loginSchema";
+import { UserContext } from "../../providers/UserContext";
 
 export const TelaInicialLogin = (): JSX.Element => {
   const { userLogin, loading } = useContext(UserContext);
   const [error, setError] = useState<string | null>(null);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema)
   });
   const navigate = useNavigate();
 
-  const submit = async (formData: LoginFormData) => {
+  const submit = async (formData: LoginFormType) => {
     try {
       setError(null);
       await userLogin(formData);

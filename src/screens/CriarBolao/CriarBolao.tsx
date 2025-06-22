@@ -8,21 +8,13 @@ import { authorization } from "../../lib/utils";
 import { useBoloes } from "../../hooks/useBoloes";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { CreateBolaoForm, createBolaoSchema } from "../../schemas/criarBolaoSchema";
 
 interface Campeonato {
   campeonato_id: number;
   nome: string;
   slug: string;
 }
-
-const createBolaoSchema = z.object({
-  name: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
-  password: z.string().min(4, "Senha deve ter pelo menos 4 caracteres"),
-  campeonato: z.string().min(1, "Selecione um campeonato"),
-});
-
-type CreateBolaoForm = z.infer<typeof createBolaoSchema>;
 
 export const CriarBolao = (): JSX.Element => {
   const navigate = useNavigate();

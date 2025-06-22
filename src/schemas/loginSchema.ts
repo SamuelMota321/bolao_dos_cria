@@ -8,3 +8,5 @@ export const loginSchema = z.object({
         .string()
         .min(1, "Forneça uma senha")
 });
+
+export type LoginFormType = z.infer<typeof loginSchema>
