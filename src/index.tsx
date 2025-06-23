@@ -29,7 +29,7 @@ createRoot(document.getElementById("app") as HTMLElement).render(
           <Route path="/verificar-codigo" element={<VerificarCodigo />} />
           <Route path="/redefinir-senha" element={<RedefinirSenha />} />
           <Route path="/senha-atualizada" element={<SenhaAtualizada />} />
-          
+
           {/* Protected Routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
@@ -64,5 +64,5 @@ createRoot(document.getElementById("app") as HTMLElement).render(
         </Routes>
       </UserContextProvider>
     </Router>
-  </StrictMode>
+  </StrictMode >
 );

@@ -30,22 +30,39 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
   useEffect(() => {
     // Verificar sessão atual
-    supabase.auth.getSession().then(({ data }: { data: { session: Session | null } }) => {
-      const { session } = data;
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
-      setLoading(false);
-    });
-    // Escutar mudanças de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: AuthChangeEvent, session: Session) => {
+    const getSession = async () => {
+      try {
+        console.log("chamando getSession")
+        const { data, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Erro ao obter sessão:', error);
+          setLoading(false);
+          return;
+        }
+
+        const { session } = data;
         setUser(session?.user ?? null);
         if (session?.user) {
           await fetchProfile(session.user.id);
-        } else {
-          setProfile(null);
+        }
+      } catch (error) {
+        console.error('Erro ao verificar sessão:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getSession();
+
+    // Escutar mudanças de autenticação
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event: AuthChangeEvent, session: Session | null) => {
+        console.log('Auth state changed:', event, session?.user?.id);
+
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          console.log("estou sendo chamado")
+          await fetchProfile(session.user.id);
         }
         setLoading(false);
       }
@@ -53,38 +70,55 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
     return () => subscription.unsubscribe();
   }, []);
+  
 
   const fetchProfile = async (userId: string) => {
+    console.log('Iniciando fetchProfile para', userId);
+
     try {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (error) throw error;
-      setProfile(data);
+      console.log("Sai do await supabase.from().select");
+
+      if (error) {
+        console.error('Erro ao buscar perfil:', error);
+      }
+
+      console.log("Erro do supabase:", error);
+      console.log("Dados recebidos do perfil:", data);
+      if (data) {
+        setProfile(data);
+      }
     } catch (error) {
-      console.error('Erro ao buscar perfil:', error);
+      console.error('Erro ao buscar perfil (try/catch):', error);
     }
   };
 
   const userLogin = async (formData: LoginFormType) => {
     try {
       setLoading(true);
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Erro no login:', error);
+        throw new Error(error.message || 'Erro ao fazer login');
+      }
 
       if (data.user) {
-        navigate("/dashboard");
+        console.log('Login realizado com sucesso:', data.user.id);
+        // O redirecionamento será feito pelo useEffect quando o estado do usuário mudar
       }
     } catch (error: any) {
       console.error('Erro no login:', error);
-      throw new Error(error.message || 'Erro ao fazer login');
+      throw error;
     } finally {
       setLoading(false);
     }
@@ -110,7 +144,10 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
             email: formData.email,
           });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          console.error('Erro ao criar perfil:', profileError);
+          throw profileError;
+        }
 
         navigate("/sucesso");
       }

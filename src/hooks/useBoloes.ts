@@ -2,6 +2,10 @@ import { useState, useEffect, useContext } from 'react';
 import { supabase, Bolao } from '../lib/supabase';
 import { UserContext } from '../providers/UserContext';
 
+type RawBolao = Omit<Bolao, 'participants_count'> & {
+  participants_count?: { count: number }[]
+}
+
 export const useBoloes = () => {
   const { user } = useContext(UserContext);
   const [boloes, setBoloes] = useState<Bolao[]>([]);
@@ -26,7 +30,7 @@ export const useBoloes = () => {
       if (error) throw error;
 
       // Processar contagem de participantes
-      const processedData = data?.map(bolao => ({
+      const processedData = (data as RawBolao[])?.map(bolao => ({
         ...bolao,
         participants_count: bolao.participants_count?.[0]?.count || 0
       })) || [];
@@ -78,7 +82,7 @@ export const useBoloes = () => {
         ...(participatingBoloes?.map(p => p.bolao).filter(Boolean) || [])
       ];
 
-      const uniqueBoloes = allUserBoloes.filter((bolao, index, self) => 
+      const uniqueBoloes = allUserBoloes.filter((bolao, index, self) =>
         index === self.findIndex(b => b.id === bolao.id)
       );
 
@@ -257,5 +261,6 @@ export const useBoloes = () => {
     createBolao,
     joinBolao,
     joinBolaoByPassword,
+    setLoading
   };
 };

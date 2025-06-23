@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Button } from "../../components/ui/button";
 import { Card, CardContent } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
@@ -9,12 +9,19 @@ import { LoginFormType, loginSchema } from "../../schemas/loginSchema";
 import { UserContext } from "../../providers/UserContext";
 
 export const TelaInicialLogin = (): JSX.Element => {
-  const { userLogin, loading } = useContext(UserContext);
+  const { user, userLogin, loading } = useContext(UserContext);
   const [error, setError] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema)
   });
   const navigate = useNavigate();
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (user && !loading) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
 
   const submit = async (formData: LoginFormType) => {
     try {
@@ -24,6 +31,16 @@ export const TelaInicialLogin = (): JSX.Element => {
       setError(err.message);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen bg-[#111611] items-center justify-center">
+        <div className="text-white text-xl [font-family:'Plus_Jakarta_Sans',Helvetica]">
+          Carregando...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-[#111611] overflow-hidden">

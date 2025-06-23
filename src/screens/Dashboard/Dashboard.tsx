@@ -1,20 +1,19 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "../../components/ui/button";
 import { Header } from "../../components/ui/header";
 import { Input } from "../../components/ui/input";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../../providers/UserContext";
 import { useBoloes } from "../../hooks/useBoloes";
 
 export const Dashboard = (): JSX.Element => {
   const navigate = useNavigate();
-  const { profile } = useContext(UserContext);
-  const { meusBoloes, boloes, loading, fetchAllBoloes } = useBoloes();
+  const { meusBoloes, boloes, loading, setLoading, fetchAllBoloes } = useBoloes();
   const [activeTab, setActiveTab] = useState<'meus' | 'todos'>('meus');
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    setLoading(false)
     if (activeTab === 'todos') {
       fetchAllBoloes();
     }
@@ -73,22 +72,20 @@ export const Dashboard = (): JSX.Element => {
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <Button 
-            className={`h-10 px-6 rounded-lg font-semibold ${
-              activeTab === 'meus' 
-                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]' 
+          <Button
+            className={`h-10 px-6 rounded-lg font-semibold ${activeTab === 'meus'
+                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]'
                 : 'bg-[#FFF] hover:bg-[#E6E6E6]/90 text-black'
-            }`}
+              }`}
             onClick={() => setActiveTab('meus')}
           >
             Meus Bolões
           </Button>
-          <Button 
-            className={`h-10 px-6 rounded-lg font-semibold ${
-              activeTab === 'todos' 
-                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]' 
+          <Button
+            className={`h-10 px-6 rounded-lg font-semibold ${activeTab === 'todos'
+                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]'
                 : 'bg-[#FFF] hover:bg-[#E6E6E6]/90 text-black'
-            }`}
+              }`}
             onClick={() => setActiveTab('todos')}
           >
             Todos os Bolões
@@ -119,7 +116,7 @@ export const Dashboard = (): JSX.Element => {
                     {bolao.participants_count} participantes
                   </div>
                 </div>
-                
+
                 <div className="mb-4">
                   <p className="text-[#9eb79e] text-sm [font-family:'Plus_Jakarta_Sans',Helvetica] mb-1">
                     Campeonato
@@ -161,9 +158,9 @@ export const Dashboard = (): JSX.Element => {
               className="w-32 h-32 mb-6"
             />
             <p className="text-[#9eb79e] text-xl mb-8 [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              {activeTab === 'meus' 
-                ? 'Você ainda não participa de nenhum bolão.' 
-                : searchTerm 
+              {activeTab === 'meus'
+                ? 'Você ainda não participa de nenhum bolão.'
+                : searchTerm
                   ? `Nenhum bolão encontrado para "${searchTerm}"`
                   : 'Nenhum bolão disponível.'
               }

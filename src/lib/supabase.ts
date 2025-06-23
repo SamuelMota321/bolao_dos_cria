@@ -5,8 +5,18 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 let supabase: any
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please click "Connect to Supabase" button in the top right corner to set up your Supabase project.')
+// Check if environment variables are missing or contain placeholder values
+const isValidUrl = supabaseUrl && 
+  supabaseUrl !== 'YOUR_SUPABASE_PROJECT_URL' && 
+  supabaseUrl.startsWith('https://') &&
+  supabaseUrl.includes('.supabase.co')
+
+const isValidKey = supabaseAnonKey && 
+  supabaseAnonKey !== 'YOUR_SUPABASE_PROJECT_ANON_KEY' &&
+  supabaseAnonKey.length > 20
+
+if (!isValidUrl || !isValidKey) {
+  console.error('Missing or invalid Supabase environment variables. Please click "Connect to Supabase" button in the top right corner to set up your Supabase project.')
   
   // Create a mock client to prevent the app from crashing
   const mockClient = {
@@ -28,6 +38,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
   // Assign the mock client to prevent crashes
   supabase = mockClient
 } else {
+  // Only create the real client if environment variables are valid
   supabase = createClient(supabaseUrl, supabaseAnonKey)
 }
 

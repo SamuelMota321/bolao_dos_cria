@@ -13,6 +13,7 @@ export const PerfilUsuario = (): JSX.Element => {
 
   const handleLogout = async () => {
     try {
+      console.log("Saindo...")
       await userLogout();
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
