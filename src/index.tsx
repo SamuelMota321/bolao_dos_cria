@@ -14,6 +14,8 @@ import { EsqueciSenha } from "./screens/EsqueciSenha";
 import { VerificarCodigo } from "./screens/VerificarCodigo";
 import { RedefinirSenha } from "./screens/RedefinirSenha";
 import { SenhaAtualizada } from "./screens/SenhaAtualizada";
+import { TodosBoloes } from "./screens/TodosBoloes";
+import { VisualizarBolao } from "./screens/VisualizarBolao";
 import { UserContextProvider } from "./providers/UserContext";
 import { ProtectedRoute } from "./components/ui/ProtectedRoute";
 
@@ -34,6 +36,16 @@ createRoot(document.getElementById("app") as HTMLElement).render(
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/todos-boloes" element={
+            <ProtectedRoute>
+              <TodosBoloes />
+            </ProtectedRoute>
+          } />
+          <Route path="/bolao/:id" element={
+            <ProtectedRoute>
+              <VisualizarBolao />
             </ProtectedRoute>
           } />
           <Route path="/criar-bolao" element={

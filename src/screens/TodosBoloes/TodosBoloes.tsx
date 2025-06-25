@@ -6,23 +6,19 @@ import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useBoloes } from "../../hooks/useBoloes";
 
-export const Dashboard = (): JSX.Element => {
+export const TodosBoloes = (): JSX.Element => {
   const navigate = useNavigate();
-  const { meusBoloes, boloes, loading, setLoading, fetchAllBoloes } = useBoloes();
-  const [activeTab, setActiveTab] = useState<'meus' | 'todos'>('meus');
+  const { boloes, loading, fetchAllBoloes } = useBoloes();
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    setLoading(false)
-    if (activeTab === 'todos') {
-      fetchAllBoloes();
-    }
-  }, [activeTab]);
+    fetchAllBoloes();
+  }, []);
 
-  const currentBoloes = activeTab === 'meus' ? meusBoloes : boloes;
-  const filteredBoloes = currentBoloes.filter(bolao =>
+  const filteredBoloes = boloes.filter(bolao =>
     bolao.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    bolao.campeonato.toLowerCase().includes(searchTerm.toLowerCase())
+    bolao.campeonato.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (bolao.creator?.name || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -52,7 +48,7 @@ export const Dashboard = (): JSX.Element => {
       <main className="px-8 py-6">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-white text-3xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
-            {activeTab === 'meus' ? 'Meus Bolões' : 'Todos os Bolões'}
+            Todos os Bolões
           </h1>
           <div className="flex items-center gap-4">
             <Button
@@ -72,24 +68,6 @@ export const Dashboard = (): JSX.Element => {
         </div>
 
         <div className="flex items-center gap-4 mb-8">
-          <Button
-            className={`h-10 px-6 rounded-lg font-semibold ${activeTab === 'meus'
-                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]'
-                : 'bg-[#FFF] hover:bg-[#E6E6E6]/90 text-black'
-              }`}
-            onClick={() => setActiveTab('meus')}
-          >
-            Meus Bolões
-          </Button>
-          <Button
-            className={`h-10 px-6 rounded-lg font-semibold ${activeTab === 'todos'
-                ? 'bg-[#14AE5C] hover:bg-[#059749]/90 text-[#ffffff]'
-                : 'bg-[#FFF] hover:bg-[#E6E6E6]/90 text-black'
-              }`}
-            onClick={() => setActiveTab('todos')}
-          >
-            Todos os Bolões
-          </Button>
           <div className="flex-1 flex justify-end">
             <div className="relative w-80">
               <Input
@@ -159,11 +137,9 @@ export const Dashboard = (): JSX.Element => {
               className="w-32 h-32 mb-6"
             />
             <p className="text-[#9eb79e] text-xl mb-8 [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              {activeTab === 'meus'
-                ? 'Você ainda não participa de nenhum bolão.'
-                : searchTerm
-                  ? `Nenhum bolão encontrado para "${searchTerm}"`
-                  : 'Nenhum bolão disponível.'
+              {searchTerm
+                ? `Nenhum bolão encontrado para "${searchTerm}"`
+                : 'Nenhum bolão disponível.'
               }
             </p>
             <div className="flex items-center gap-4">
@@ -172,13 +148,6 @@ export const Dashboard = (): JSX.Element => {
                 onClick={() => navigate("/criar-bolao")}
               >
                 Criar um Bolão
-              </Button>
-              <Button
-                variant="outline"
-                className="bg-[#FFF] hover:bg-[#E6E6E6]/90 text-black border-none h-10 px-6 rounded-lg"
-                onClick={() => navigate("/todos-boloes")}
-              >
-                Ver Todos os Bolões
               </Button>
             </div>
           </div>

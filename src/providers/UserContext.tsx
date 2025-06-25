@@ -1,11 +1,10 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase, Profile } from "../lib/supabase";
+import { supabase, Profile, supabaseUrl, supabaseAnonKey } from "../lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { LoginFormType } from "../schemas/loginSchema";
 import { RegisterFormType } from "../schemas/registerSchema";
 import { Session, AuthChangeEvent } from '@supabase/supabase-js';
-
 
 interface UserProviderProps {
   children: ReactNode;
@@ -28,12 +27,14 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
-    // Verificar sessão atual
     const getSession = async () => {
       try {
-        console.log("chamando getSession")
+        console.log("Verificando sessão do usuário...");
         const { data, error } = await supabase.auth.getSession();
+        console.log("Dados da sessão:", data);
+
         if (error) {
           console.error('Erro ao obter sessão:', error);
           setLoading(false);
@@ -42,8 +43,14 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
         const { session } = data;
         setUser(session?.user ?? null);
+
         if (session?.user) {
-          await fetchProfile(session.user.id);
+          // 🟢 Buscar perfil real do banco
+          const profile = await fetchProfile(session.user.id, session.access_token);
+          console.log("Perfil carregado via session:", profile);
+          setProfile(profile);
+        } else {
+          setProfile(null);
         }
       } catch (error) {
         console.error('Erro ao verificar sessão:', error);
@@ -54,48 +61,36 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
     getSession();
 
-    // Escutar mudanças de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
         console.log('Auth state changed:', event, session?.user?.id);
-
         setUser(session?.user ?? null);
+
         if (session?.user) {
-          console.log("estou sendo chamado")
-          await fetchProfile(session.user.id);
+          const profile = await fetchProfile(session.user.id, session.access_token);
+          console.log("Perfil carregado via onAuthStateChange:", profile);
+          setProfile(profile);
+        } else {
+          setProfile(null);
         }
+
         setLoading(false);
       }
     );
 
     return () => subscription.unsubscribe();
   }, []);
-  
 
-  const fetchProfile = async (userId: string) => {
-    console.log('Iniciando fetchProfile para', userId);
-
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .maybeSingle();
-
-      console.log("Sai do await supabase.from().select");
-
-      if (error) {
-        console.error('Erro ao buscar perfil:', error);
+  const fetchProfile = async (userId: string, token: string) => {
+    const response = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${userId}`, {
+      headers: {
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${token}`,
       }
+    });
 
-      console.log("Erro do supabase:", error);
-      console.log("Dados recebidos do perfil:", data);
-      if (data) {
-        setProfile(data);
-      }
-    } catch (error) {
-      console.error('Erro ao buscar perfil (try/catch):', error);
-    }
+    const data = await response.json();
+    return data[0];
   };
 
   const userLogin = async (formData: LoginFormType) => {
@@ -130,12 +125,17 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          data: {
+            name: formData.name
+          }
+        }
       });
 
       if (error) throw error;
 
       if (data.user) {
-        // Criar perfil do usuário
+        // Criar perfil do usuário na tabela profiles
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
@@ -146,7 +146,7 @@ export const UserContextProvider = ({ children }: UserProviderProps): JSX.Elemen
 
         if (profileError) {
           console.error('Erro ao criar perfil:', profileError);
-          throw profileError;
+          // Não falhar o registro se o perfil não for criado
         }
 
         navigate("/sucesso");

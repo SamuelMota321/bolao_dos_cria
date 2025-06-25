@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+export const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+export const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 let supabase: any
 
@@ -70,6 +70,32 @@ export interface BolaoParticipant {
   joined_at: string
   user?: Profile
   bolao?: Bolao
+}
+
+export interface Match {
+  id: string
+  bolao_id: string
+  team_home: string
+  team_away: string
+  match_date: string
+  home_score: number | null
+  away_score: number | null
+  status: 'scheduled' | 'live' | 'finished'
+  created_at: string
+  updated_at: string
+}
+
+export interface Prediction {
+  id: string
+  match_id: string
+  user_id: string
+  predicted_home_score: number
+  predicted_away_score: number
+  points: number
+  created_at: string
+  updated_at: string
+  user?: Profile
+  match?: Match
 }
 
 export { supabase }

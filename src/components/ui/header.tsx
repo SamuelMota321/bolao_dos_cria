@@ -37,7 +37,10 @@ export const Header = () => {
           >
             Inicio
           </span>
-          <span className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors">
+          <span 
+            className="text-white text-lg [font-family:'Plus_Jakarta_Sans',Helvetica] cursor-pointer hover:text-[#19e519] transition-colors"
+            onClick={() => navigate("/todos-boloes")}
+          >
             Bolões
           </span>
           <span
