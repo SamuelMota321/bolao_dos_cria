@@ -3,12 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Header } from "../../components/ui/header";
 import { Input } from "../../components/ui/input";
-import { ChevronLeft, Plus, Trash2, Users, Calendar, Trophy, Search } from "lucide-react";
+import { ChevronLeft, Plus, Trash2, Users, Calendar, Trophy, Search, Edit, Settings } from "lucide-react";
 import { supabase, Bolao, BolaoParticipant, Match, Prediction } from "../../lib/supabase";
 import { UserContext } from "../../providers/UserContext";
 import { api } from "../../lib/api";
 import { authorization } from "../../lib/utils";
-import { ConfirmModal, AlertModal } from "../../components/ui/modal";
+import { ConfirmModal, AlertModal, Modal } from "../../components/ui/modal";
 
 interface ApiPartida {
   partida_id: number;
@@ -60,6 +60,11 @@ export const VisualizarBolao = (): JSX.Element => {
   const [searchApiPartidas, setSearchApiPartidas] = useState("");
   const [addingMatch, setAddingMatch] = useState(false);
   const [predictionInputs, setPredictionInputs] = useState<{[key: string]: {home: string, away: string}}>({});
+
+  // Estados para edição do bolão
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingBolao, setEditingBolao] = useState(false);
+  const [newBolaoName, setNewBolaoName] = useState("");
 
   // Estados para modais
   const [confirmModal, setConfirmModal] = useState<{
@@ -114,6 +119,13 @@ export const VisualizarBolao = (): JSX.Element => {
     });
     setPredictionInputs(initialInputs);
   }, [matches, predictions, user?.id]);
+
+  // Inicializar nome do bolão para edição
+  useEffect(() => {
+    if (bolao) {
+      setNewBolaoName(bolao.name);
+    }
+  }, [bolao]);
 
   const showAlert = (title: string, message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setAlertModal({
@@ -208,6 +220,66 @@ export const VisualizarBolao = (): JSX.Element => {
     } finally {
       setLoadingApiPartidas(false);
     }
+  };
+
+  const handleEditBolao = async () => {
+    if (!newBolaoName.trim()) {
+      showAlert('Erro de Validação', 'O nome do bolão não pode estar vazio', 'error');
+      return;
+    }
+
+    if (newBolaoName.trim().length < 3) {
+      showAlert('Erro de Validação', 'O nome do bolão deve ter pelo menos 3 caracteres', 'error');
+      return;
+    }
+
+    try {
+      setEditingBolao(true);
+      
+      const { error } = await supabase
+        .from('boloes')
+        .update({ name: newBolaoName.trim() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      await fetchBolaoData();
+      setShowEditModal(false);
+      showAlert('Sucesso', 'Nome do bolão atualizado com sucesso!', 'success');
+    } catch (error) {
+      console.error('Erro ao editar bolão:', error);
+      showAlert('Erro', 'Erro ao atualizar nome do bolão', 'error');
+    } finally {
+      setEditingBolao(false);
+    }
+  };
+
+  const handleDeleteBolao = async () => {
+    showConfirm(
+      'Confirmar Exclusão do Bolão',
+      `Tem certeza que deseja excluir o bolão "${bolao?.name}"? Esta ação não pode ser desfeita e todos os dados relacionados (partidas, palpites, participantes) serão perdidos permanentemente.`,
+      async () => {
+        try {
+          const { error } = await supabase
+            .from('boloes')
+            .delete()
+            .eq('id', id);
+
+          if (error) throw error;
+
+          showAlert('Sucesso', 'Bolão excluído com sucesso!', 'success');
+          
+          // Redirecionar após 2 segundos
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 2000);
+        } catch (error) {
+          console.error('Erro ao excluir bolão:', error);
+          showAlert('Erro', 'Erro ao excluir bolão', 'error');
+        }
+      },
+      'danger'
+    );
   };
 
   const handleAddApiMatch = async (apiPartida: ApiPartida) => {
@@ -417,13 +489,39 @@ export const VisualizarBolao = (): JSX.Element => {
       <main className="px-8 py-6">
         {/* Header do Bolão */}
         <div className="bg-white/95 backdrop-blur-sm rounded-xl p-6 mb-6">
-          <div className="mb-4">
-            <h1 className="text-[#111611] text-2xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              {bolao.name}
-            </h1>
-            <p className="text-[#9eb79e] text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
-              Criado por {bolao.creator?.name || 'Usuário'}
-            </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-[#111611] text-2xl font-bold [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                {bolao.name}
+              </h1>
+              <p className="text-[#9eb79e] text-sm [font-family:'Plus_Jakarta_Sans',Helvetica]">
+                Criado por {bolao.creator?.name || 'Usuário'}
+              </p>
+            </div>
+            
+            {/* Botões de ação para o dono */}
+            {isOwner && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowEditModal(true)}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  <Edit className="w-4 h-4 mr-2" />
+                  Editar Nome
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDeleteBolao}
+                  className="border-red-300 text-red-600 hover:bg-red-50"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Excluir Bolão
+                </Button>
+              </div>
+            )}
           </div>
           
           <div className="grid grid-cols-3 gap-8">
@@ -863,6 +961,45 @@ export const VisualizarBolao = (): JSX.Element => {
           </div>
         )}
       </main>
+
+      {/* Modal de Edição do Bolão */}
+      <Modal isOpen={showEditModal} onClose={() => setShowEditModal(false)}>
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-[#111611] mb-4 [font-family:'Plus_Jakarta_Sans',Helvetica]">
+            Editar Nome do Bolão
+          </h3>
+          <div className="space-y-4">
+            <div className="text-left">
+              <label className="text-[#9eb79e] text-sm [font-family:'Plus_Jakarta_Sans',Helvetica] block mb-2">
+                Nome do Bolão
+              </label>
+              <Input
+                value={newBolaoName}
+                onChange={(e) => setNewBolaoName(e.target.value)}
+                className="w-full"
+                placeholder="Digite o novo nome do bolão"
+                maxLength={50}
+              />
+            </div>
+            <div className="flex gap-3 justify-center">
+              <Button
+                variant="outline"
+                onClick={() => setShowEditModal(false)}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleEditBolao}
+                disabled={editingBolao}
+                className="bg-[#19e519] hover:bg-[#19e519]/90 text-[#111611] disabled:opacity-50"
+              >
+                {editingBolao ? 'Salvando...' : 'Salvar'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
       {/* Modais */}
       <ConfirmModal
